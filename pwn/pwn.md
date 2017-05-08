@@ -6,24 +6,24 @@
 
 Nhìn vào source code C thì t thấy có hàm `flag()` là in ra flag mà luồng thực thi của chương trình không hè có luồng nào chạy đến hàm này.
 Chính vì thế có thể đoán được là t phải Overflow để tràn đến địa chỉ hàm flag.
-[](pwn1.png)
+![](pwn1.png)
 Địa chỉ của hàm `flag()` t sử dụng `IDA Pro` để xem thì có là `66666835`
-[](pwn8.png)
+![](pwn8.png)
 Nhìn qua `cấu trúc dữ liệu của biến` và một vài `biến toàn cục`:
-[](pnw2.png)
+![](pnw2.png)
 Với dữ liệu nêu trên thì ta thấy trong luồng có 2 hàm sử dụng các hàm `read()` là có thể sử dụng để overflow là `signup()` và `signin()`
 Tuy nhiên `signup()` các hàm `read()` là an toàn vì giá trị tham số thứ 2 bằng với kích thước của biến.
-[](pwn3.png)
+![](pwn3.png)
 Còn hàm `signin()` hàm `read()` ở đây có vẻ không an toàn vì độ dài tham số thứ 2 lớn hơn kích thước biến.
-[](pwn4.png)
+![](pwn4.png)
 Sử dụng IDA ta có:
-[](pwn7.png)
+![](pwn7.png)
 Biến `pas: bp-10Ch` and `use: bp-8Ch` and `canary = bp-Ch`
 > =>> qua đó suy ra có thể Overflow hàm `read(0,ME.usn,255);` vì `0x8C = 140`
 Tuy nhiên nếu overflow ở đây thì sẽ bị tràn qua giá trị của biến `canary` mà nếu `canary != tmp` thì chương trình sẽ thực hiện `exit(1)`
-[](pwn5.png)
+![](pwn5.png)
 > Câu hỏi đặt ra là làm thế nào để overflow mà vẫn có thể giữ lại giá trị cho biến `canary` thế nên ta phải tính được giá trị của `tmp`
-[](pwn6.png)
+![](pwn6.png)
 `tmp` được tính bằng hàm `srand()` với `time(NULL)` trong `C`.
 Với python ta `import` thư viện của `C` vào: `from ctypes import CDLL` and `libc = CDLL('libc.so.6')`
 ```py
