@@ -1,6 +1,6 @@
 ### PWN
 > nc 203.162.88.114 44444
->[Binary and Source](src.zip)
+>[Binary and Source](https://github.com/bigbearattt/PTITCTF/raw/master/pwn/src.zip)
 
 ### Solve
 
